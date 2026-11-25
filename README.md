@@ -4,7 +4,7 @@ Gotowy pakiet do publikacji w GitHub Pages.
 
 ## Pliki
 - `index.html` – wyszukiwarka
-- `prices.json` – 202 produktów i ceny sprzedaży
+- `prices.json` – 202 produktów i ceny sprzedaży (główna cena: EUR, dodatkowo PLN)
 
 ## Publikacja
 1. Utwórz nowe repozytorium na GitHubie, np. `price-search`.
