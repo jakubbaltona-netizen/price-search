@@ -1,5 +1,1626 @@
 <!doctype html><html lang="pl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Wyszukiwarka cen | Baltona Shipchandlers</title><style>
 :root{--navy:#081a35;--blue:#1167d8;--bg:#f4f7fb;--card:#fff;--line:#dce5f0;--muted:#607086;--text:#10213b}*{box-sizing:border-box}body{margin:0;background:linear-gradient(180deg,var(--navy) 0 220px,var(--bg) 220px);font-family:Segoe UI,Arial,sans-serif;color:var(--text);min-height:100vh}#app{max-width:1180px;margin:auto;padding:36px 22px}.top{display:flex;justify-content:space-between;gap:20px;color:#fff;margin-bottom:28px}.eyebrow{font-size:12px;letter-spacing:.15em;color:#9fc6ff;font-weight:700}.top h1{font-size:48px;margin:7px 0 5px}.top p{margin:0;color:#c7d7ec}.headActions{display:flex;gap:9px;align-items:flex-start}.cartBtn,.status{border:1px solid rgba(255,255,255,.2);border-radius:999px;padding:10px 13px}.cartBtn{background:#fff;color:var(--navy);font-weight:800;cursor:pointer}.badge{background:var(--blue);color:#fff;border-radius:999px;padding:3px 7px;margin-left:5px}.status{font-size:13px;background:rgba(255,255,255,.1)}.panel{background:white;border-radius:18px;padding:24px;box-shadow:0 12px 30px rgba(0,0,0,.08)}label{font-size:14px;font-weight:700}.searchBox{display:flex;border:2px solid var(--line);border-radius:13px;margin-top:9px}.searchBox:focus-within{border-color:var(--blue)}input[type=search]{width:100%;border:0;outline:0;padding:15px;font-size:18px;border-radius:13px}.clear{border:0;background:none;font-size:28px;color:#7a8798;padding:0 15px;cursor:pointer}.summary{padding:22px 4px 12px}.results{display:grid;gap:12px}.card{background:white;border:1px solid var(--line);border-radius:15px;padding:18px 20px;display:grid;grid-template-columns:1fr auto;gap:20px}.code{font:700 13px monospace;color:var(--blue)}.pl{font-weight:750;margin:7px 0 4px}.eng{color:var(--muted);font-size:14px}.unit{display:inline-block;margin-top:9px;background:#eef3f8;border-radius:999px;padding:4px 8px;font-size:12px}.prices{text-align:right;min-width:260px}.mainPrice{font-size:25px;font-weight:800}.other{color:var(--muted);font-size:14px;margin-top:3px}.buttons{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:6px;margin-top:11px}.btn{border:1px solid #b9cee8;background:#fff;color:#0b4fae;padding:8px 10px;border-radius:9px;font-weight:700;cursor:pointer}.add{background:var(--blue);color:#fff;border-color:var(--blue)}.modal[hidden]{display:none}.modal{position:fixed;inset:0;z-index:50;display:grid;place-items:center;padding:15px}.backdrop{position:absolute;inset:0;background:rgba(4,15,30,.65)}.cart{position:relative;background:var(--bg);width:min(960px,100%);max-height:90vh;border-radius:18px;overflow:hidden;display:flex;flex-direction:column}.cartHead{display:flex;justify-content:space-between;align-items:center;background:#fff;padding:20px;border-bottom:1px solid var(--line)}.cartHead h2{margin:3px 0}.close{border:0;border-radius:50%;width:38px;height:38px;font-size:25px;cursor:pointer}.cartItems{padding:14px;display:grid;gap:8px;overflow:auto}.row{display:grid;grid-template-columns:1fr 80px 125px 125px 36px;gap:10px;align-items:center;background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px}.row small{display:block;color:var(--muted);margin-top:3px}.qty{width:70px;border:1px solid var(--line);border-radius:8px;padding:8px}.sum{text-align:right;font-weight:750}.remove{border:0;background:#fff0f0;color:#b42318;border-radius:8px;width:34px;height:34px;font-size:20px;cursor:pointer}.cartFoot{display:flex;justify-content:flex-end;align-items:center;gap:22px;background:#fff;border-top:1px solid var(--line);padding:15px 20px}.tot span{display:block;color:var(--muted);font-size:11px}.tot strong{font-size:19px}.danger{border:1px solid #efb3ae;background:#fff;color:#b42318;border-radius:9px;padding:9px 11px;font-weight:700;cursor:pointer}.empty{text-align:center;padding:35px;color:var(--muted)}footer{color:#718096;font-size:12px;padding:24px 4px}@media(max-width:700px){#app{padding:24px 14px}.top{display:block}.top h1{font-size:36px}.headActions{margin-top:15px;flex-wrap:wrap}.card{grid-template-columns:1fr}.prices{text-align:left;min-width:0;border-top:1px solid var(--line);padding-top:12px}.buttons{justify-content:flex-start}.row{grid-template-columns:1fr 70px 36px}.sum{grid-column:1/2;text-align:left}.cartFoot{flex-direction:column;align-items:stretch}.danger{width:100%}}
 </style></head><body><div id="app"><header class="top"><div><div class="eyebrow">BALTONA SHIPCHANDLERS · SZCZECIN</div><h1>Wyszukiwarka cen</h1><p>Cennik Cabin Store · główna cena EUR</p></div><div class="headActions"><button id="openCart" class="cartBtn">Notatnik <span id="cartCount" class="badge">0</span></button><div id="dataStatus" class="status">Ładowanie danych…</div></div></header><main><section class="panel"><label for="search">Wpisz kod albo nazwę produktu po polsku lub angielsku</label><div class="searchBox"><input id="search" type="search" autocomplete="off" placeholder="np. tytan, ręcznik, A87412…"><button id="clear" class="clear">×</button></div></section><div class="summary"><strong id="count">Wpisz minimum 2 znaki</strong></div><section id="results" class="results"></section></main><div id="modal" class="modal" hidden><div class="backdrop" id="backdrop"></div><section class="cart"><div class="cartHead"><div><div class="eyebrow" style="color:#1167d8">WYBRANE POZYCJE</div><h2>Notatnik cen</h2></div><button id="closeCart" class="close">×</button></div><div id="cartItems" class="cartItems"></div><div class="cartFoot"><div class="tot"><span>RAZEM EUR</span><strong id="totalEur">0,00 EUR</strong></div><div class="tot"><span>RAZEM PLN</span><strong id="totalPln">0,00 PLN</strong></div><button id="clearCart" class="danger">Wyczyść notatnik</button></div></section></div><footer>Baltona Shipchandlers Szczecin Branch</footer></div><script>
-(()=>{'use strict';const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];let products=[],cart=[];try{cart=JSON.parse(localStorage.getItem('baltonaNotebook')||'[]')}catch{cart=[]}const norm=s=>(s||'').toString().normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();const esc=s=>(s||'').toString().replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));const money=(n,c)=>new Intl.NumberFormat('pl-PL',{minimumFractionDigits:2,maximumFractionDigits:2}).format(n)+' '+c;const raw=n=>new Intl.NumberFormat('pl-PL',{minimumFractionDigits:2,maximumFractionDigits:2}).format(n);function save(){localStorage.setItem('baltonaNotebook',JSON.stringify(cart));renderCart()}function add(p){let x=cart.find(x=>x.code===p.code);if(x)x.qty++;else cart.push({...p,qty:1});save()}function renderCart(){const qty=cart.reduce((a,x)=>a+x.qty,0);$('#cartCount').textContent=qty;const box=$('#cartItems');if(!cart.length){box.innerHTML='<div class="empty">Notatnik jest pusty. Wyszukaj produkt i kliknij „Dodaj do notatnika”.</div>';$('#totalEur').textContent=money(0,'EUR');$('#totalPln').textContent=money(0,'PLN');return}box.innerHTML=cart.map((x,i)=>`<div class="row"><div><strong>${esc(x.descriptionEng)}</strong><small>${esc(x.code)} · ${esc(x.unit)}</small></div><input class="qty" data-i="${i}" type="number" min="1" max="9999" value="${x.qty}"><div class="sum">${money(x.priceEur*x.qty,'EUR')}</div><div class="sum">${money(x.pricePln*x.qty,'PLN')}</div><button class="remove" data-i="${i}">×</button></div>`).join('');$('#totalEur').textContent=money(cart.reduce((a,x)=>a+x.priceEur*x.qty,0),'EUR');$('#totalPln').textContent=money(cart.reduce((a,x)=>a+x.pricePln*x.qty,0),'PLN');$$('.qty').forEach(e=>e.onchange=()=>{cart[+e.dataset.i].qty=Math.max(1,Math.min(9999,Math.round(+e.value||1)));save()});$$('.remove').forEach(b=>b.onclick=()=>{cart.splice(+b.dataset.i,1);save()})}function copy(text,b,label){navigator.clipboard.writeText(text).then(()=>{b.textContent='Skopiowano';setTimeout(()=>b.textContent=label,900)}).catch(()=>{})}function render(){let q=$('#search').value.trim();if(q.length<2){$('#count').textContent='Wpisz minimum 2 znaki';$('#results').innerHTML='';return}const terms=norm(q).split(/\s+/).filter(Boolean),rows=products.filter(p=>terms.every(t=>norm([p.code,p.descriptionPl,p.descriptionEng].join(' ')).includes(t))).slice(0,100);$('#count').textContent=rows.length?`${rows.length} wyników`:'Brak wyników';$('#results').innerHTML=rows.length?rows.map((p,i)=>`<article class="card"><div><div class="code">${esc(p.code)}</div><div class="pl">${esc(p.descriptionPl)}</div><div class="eng">${esc(p.descriptionEng)}</div><span class="unit">${esc(p.unit)}</span></div><div class="prices"><div class="mainPrice">${money(p.priceEur,'EUR')}</div><div class="other">${money(p.pricePln,'PLN')}</div><div class="buttons"><button class="btn add" data-add="${i}">+ Dodaj do notatnika</button><button class="btn name" data-i="${i}">Kopiuj nazwę</button><button class="btn eur" data-i="${i}">Kopiuj cenę EUR</button><button class="btn pln" data-i="${i}">Kopiuj cenę PLN</button></div></div></article>`).join(''):'<div class="empty">Nie znaleziono produktu.</div>';$$('[data-add]').forEach(b=>b.onclick=()=>{add(rows[+b.dataset.add]);b.textContent='Dodano ✓';setTimeout(()=>b.textContent='+ Dodaj do notatnika',800)});$$('.name').forEach(b=>b.onclick=()=>copy(rows[+b.dataset.i].descriptionEng,b,'Kopiuj nazwę'));$$('.eur').forEach(b=>b.onclick=()=>copy(raw(rows[+b.dataset.i].priceEur),b,'Kopiuj cenę EUR'));$$('.pln').forEach(b=>b.onclick=()=>copy(raw(rows[+b.dataset.i].pricePln),b,'Kopiuj cenę PLN'))}$('#search').oninput=render;$('#clear').onclick=()=>{$('#search').value='';render();$('#search').focus()};$('#openCart').onclick=()=>{$('#modal').hidden=false;renderCart()};$('#closeCart').onclick=$('#backdrop').onclick=()=>$('#modal').hidden=true;$('#clearCart').onclick=()=>{cart=[];save()};document.addEventListener('keydown',e=>{if(e.key==='Escape')$('#modal').hidden=true});renderCart();fetch('prices.json',{cache:'no-store'}).then(r=>r.json()).then(d=>{products=d.products||[];$('#dataStatus').textContent=`${products.length} produktów`;$('#search').focus()}).catch(()=>$('#dataStatus').textContent='Błąd prices.json')})();
-</script></body></html>
+(()=>{'use strict';const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];let products=[],cart=[];try{cart=JSON.parse(localStorage.getItem('baltonaNotebook')||'[]')}catch{cart=[]}const norm=s=>(s||'').toString().normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();const esc=s=>(s||'').toString().replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));const money=(n,c)=>new Intl.NumberFormat('pl-PL',{minimumFractionDigits:2,maximumFractionDigits:2}).format(n)+' '+c;const raw=n=>new Intl.NumberFormat('pl-PL',{minimumFractionDigits:2,maximumFractionDigits:2}).format(n);function save(){localStorage.setItem('baltonaNotebook',JSON.stringify(cart));renderCart()}function add(p){let x=cart.find(x=>x.code===p.code);if(x)x.qty++;else cart.push({...p,qty:1});save()}function renderCart(){const qty=cart.reduce((a,x)=>a+x.qty,0);$('#cartCount').textContent=qty;const box=$('#cartItems');if(!cart.length){box.innerHTML='<div class="empty">Notatnik jest pusty. Wyszukaj produkt i kliknij „Dodaj do notatnika”.</div>';$('#totalEur').textContent=money(0,'EUR');$('#totalPln').textContent=money(0,'PLN');return}box.innerHTML=cart.map((x,i)=>`<div class="row"><div><strong>${esc(x.descriptionEng)}</strong><small>${esc(x.code)} · ${esc(x.unit)}</small></div><input class="qty" data-i="${i}" type="number" min="1" max="9999" value="${x.qty}"><div class="sum">${money(x.priceEur*x.qty,'EUR')}</div><div class="sum">${money(x.pricePln*x.qty,'PLN')}</div><button class="remove" data-i="${i}">×</button></div>`).join('');$('#totalEur').textContent=money(cart.reduce((a,x)=>a+x.priceEur*x.qty,0),'EUR');$('#totalPln').textContent=money(cart.reduce((a,x)=>a+x.pricePln*x.qty,0),'PLN');$$('.qty').forEach(e=>e.onchange=()=>{cart[+e.dataset.i].qty=Math.max(1,Math.min(9999,Math.round(+e.value||1)));save()});$$('.remove').forEach(b=>b.onclick=()=>{cart.splice(+b.dataset.i,1);save()})}function copy(text,b,label){navigator.clipboard.writeText(text).then(()=>{b.textContent='Skopiowano';setTimeout(()=>b.textContent=label,900)}).catch(()=>{})}function render(){let q=$('#search').value.trim();if(q.length<2){$('#count').textContent='Wpisz minimum 2 znaki';$('#results').innerHTML='';return}const terms=norm(q).split(/\s+/).filter(Boolean),rows=products.filter(p=>terms.every(t=>norm([p.code,p.descriptionPl,p.descriptionEng].join(' ')).includes(t))).slice(0,100);$('#count').textContent=rows.length?`${rows.length} wyników`:'Brak wyników';$('#results').innerHTML=rows.length?rows.map((p,i)=>`<article class="card"><div><div class="code">${esc(p.code)}</div><div class="pl">${esc(p.descriptionPl)}</div><div class="eng">${esc(p.descriptionEng)}</div><span class="unit">${esc(p.unit)}</span></div><div class="prices"><div class="mainPrice">${money(p.priceEur,'EUR')}</div><div class="other">${money(p.pricePln,'PLN')}</div><div class="buttons"><button class="btn add" data-add="${i}">+ Dodaj do notatnika</button><button class="btn name" data-i="${i}">Kopiuj nazwę</button><button class="btn eur" data-i="${i}">Kopiuj cenę EUR</button><button class="btn pln" data-i="${i}">Kopiuj cenę PLN</button></div></div></article>`).join(''):'<div class="empty">Nie znaleziono produktu.</div>';$$('[data-add]').forEach(b=>b.onclick=()=>{add(rows[+b.dataset.add]);b.textContent='Dodano ✓';setTimeout(()=>b.textContent='+ Dodaj do notatnika',800)});$$('.name').forEach(b=>b.onclick=()=>copy(rows[+b.dataset.i].descriptionEng,b,'Kopiuj nazwę'));$$('.eur').forEach(b=>b.onclick=()=>copy(raw(rows[+b.dataset.i].priceEur),b,'Kopiuj cenę EUR'));$$('.pln').forEach(b=>b.onclick=()=>copy(raw(rows[+b.dataset.i].pricePln),b,'Kopiuj cenę PLN'))}$('#search').oninput=render;$('#clear').onclick=()=>{$('#search').value='';render();$('#search').focus()};$('#openCart').onclick=()=>{$('#modal').hidden=false;renderCart()};$('#closeCart').onclick=$('#backdrop').onclick=()=>$('#modal').hidden=true;$('#clearCart').onclick=()=>{cart=[];save()};document.addEventListener('keydown',e=>{if(e.key==='Escape')$('#modal').hidden=true});renderCart();(()=>{try{const d=JSON.parse(document.getElementById('embeddedPrices').textContent);products=d.products||[];$('#dataStatus').textContent=`${products.length} produktów`;$('#search').focus()}catch(e){$('#dataStatus').textContent='Błąd danych'}})()})();
+</script><script id="embeddedPrices" type="application/json">{
+  "updated": "2026-11-26",
+  "count": 202,
+  "products": [
+    {
+      "code": "70339/02",
+      "descriptionPl": "CZAJNIK ELEKTRYCZNY 1,8L",
+      "descriptionEng": "CORDLESS STAINLESS STEEL ELECTRIC KETTLE 1.8L",
+      "unit": "szt./pcs",
+      "pricePln": 49.19,
+      "priceEur": 10.99
+    },
+    {
+      "code": "A86037",
+      "descriptionPl": "CZAJNIK ELEKTRYCZNY B/PRZEWODOWY MPM PLASTIK 1,70 LTR",
+      "descriptionEng": "MPM CORDLESS PLASTIC ELECTRIC KETTLE 1.7L",
+      "unit": "szt./pcs",
+      "pricePln": 59.97,
+      "priceEur": 13.4
+    },
+    {
+      "code": "174244/45",
+      "descriptionPl": "CZYŚCIWO PAPIEROWE TORK M1",
+      "descriptionEng": "PAPER ROLL TORK M1",
+      "unit": "szt./pcs",
+      "pricePln": 14.5,
+      "priceEur": 3.69
+    },
+    {
+      "code": "172432/",
+      "descriptionPl": "DESKA KUCHENNA  /HACCP/ 53x32,5CM HENDI",
+      "descriptionEng": "HENDI HACCP PLASTIC CUTTING BOARD 53X32.5CM",
+      "unit": "szt./pcs",
+      "pricePln": 56.98,
+      "priceEur": 12.73
+    },
+    {
+      "code": "174055",
+      "descriptionPl": "DRUCIAK DO MYCIA NACZYŃ",
+      "descriptionEng": "STAINLESS STEEL SCOURER",
+      "unit": "szt./pcs",
+      "pricePln": 0.85,
+      "priceEur": 0.22
+    },
+    {
+      "code": "XA85329/16",
+      "descriptionPl": "DZBANEK 1,3L",
+      "descriptionEng": "JUG 1,3L",
+      "unit": "szt./pcs",
+      "pricePln": 23.1,
+      "priceEur": 5.16
+    },
+    {
+      "code": "A70608",
+      "descriptionPl": "FILTRY DO KAWY ROZM.4 A'100",
+      "descriptionEng": "COFFEE FILTERS SIZE 4 A'100",
+      "unit": "szt./pcs",
+      "pricePln": 13.15,
+      "priceEur": 3.36
+    },
+    {
+      "code": "A82086",
+      "descriptionPl": "FOLIA ALUMINIOWA 0,45x200M",
+      "descriptionEng": "ALUMINIUM FOIL 0.45X200M",
+      "unit": "szt./pcs",
+      "pricePln": 56.73,
+      "priceEur": 12.67
+    },
+    {
+      "code": "174210",
+      "descriptionPl": "FOLIA SPOŻYWCZA 0,45x200M",
+      "descriptionEng": "CLING FILM 0.45X200M",
+      "unit": "szt./pcs",
+      "pricePln": 15.33,
+      "priceEur": 3.43
+    },
+    {
+      "code": "A71041",
+      "descriptionPl": "KIJ ALUMINIOWY Z GWINTEM",
+      "descriptionEng": "THREADED ALUMINIUM HANDLE",
+      "unit": "szt./pcs",
+      "pricePln": 12.53,
+      "priceEur": 3.41
+    },
+    {
+      "code": "510642",
+      "descriptionPl": "KIJ DREWNIANY DO SZCZOTKI 1,2M GWINT.",
+      "descriptionEng": "THREADED WOODEN BRUSH HANDLE 1.2M",
+      "unit": "szt./pcs",
+      "pricePln": 7.05,
+      "priceEur": 1.95
+    },
+    {
+      "code": "510642/4",
+      "descriptionPl": "KIJ DREWNIANY DO SZCZOTKI 1,5M GWINT.",
+      "descriptionEng": "THREADED WOODEN BRUSH HANDLE 1.5M",
+      "unit": "szt./pcs",
+      "pricePln": 8.13,
+      "priceEur": 2.26
+    },
+    {
+      "code": "A85830",
+      "descriptionPl": "KOC GRUBY 160x210",
+      "descriptionEng": "THICK BLANKET 160X210CM",
+      "unit": "szt./pcs",
+      "pricePln": 102.6,
+      "priceEur": 22.92
+    },
+    {
+      "code": "A71362",
+      "descriptionPl": "KOŁDRA  135X200",
+      "descriptionEng": "DUVET 135X200CM",
+      "unit": "szt./pcs",
+      "pricePln": 87.48,
+      "priceEur": 19.54
+    },
+    {
+      "code": "150381/1",
+      "descriptionPl": "KOŁDRA SILIKON 155x200",
+      "descriptionEng": "SILICONE-FILLED DUVET 155X200CM",
+      "unit": "szt./pcs",
+      "pricePln": 94.23,
+      "priceEur": 21.05
+    },
+    {
+      "code": "A72685",
+      "descriptionPl": "KORKOCIĄG",
+      "descriptionEng": "CORKSCREW",
+      "unit": "szt./pcs",
+      "pricePln": 25.52,
+      "priceEur": 5.7
+    },
+    {
+      "code": "550336",
+      "descriptionPl": "KOSTKA DO WC - ZAWIESZKA",
+      "descriptionEng": "TOILET RIM BLOCK",
+      "unit": "szt./pcs",
+      "pricePln": 2.75,
+      "priceEur": 0.62
+    },
+    {
+      "code": "550278/1",
+      "descriptionPl": "KREM DO RĄK 100ML",
+      "descriptionEng": "HAND CREAM 100ML",
+      "unit": "szt./pcs",
+      "pricePln": 3.81,
+      "priceEur": 0.91
+    },
+    {
+      "code": "A71530",
+      "descriptionPl": "KREM NIVEA 150ML",
+      "descriptionEng": "NIVEA CREAM 150ML",
+      "unit": "szt./pcs",
+      "pricePln": 24.1,
+      "priceEur": 5.38
+    },
+    {
+      "code": "550342",
+      "descriptionPl": "KRET GRANULKI 800G",
+      "descriptionEng": "KRET DRAIN CLEANER GRANULES 800G",
+      "unit": "szt./pcs",
+      "pricePln": 16.64,
+      "priceEur": 3.72
+    },
+    {
+      "code": "A71534",
+      "descriptionPl": "KRET ŻEL 1 KG",
+      "descriptionEng": "KRET DRAIN CLEANER GEL 1KG",
+      "unit": "szt./pcs",
+      "pricePln": 21.1,
+      "priceEur": 4.71
+    },
+    {
+      "code": "A71557/1",
+      "descriptionPl": "KUBEK BIAŁY 300ML",
+      "descriptionEng": "WHITE MUG 300ML",
+      "unit": "szt./pcs",
+      "pricePln": 11.25,
+      "priceEur": 2.51
+    },
+    {
+      "code": "A71559/14",
+      "descriptionPl": "KUBEK PAPIEROWY 250ML A'50",
+      "descriptionEng": "PAPER COFFEE CUP 250ML A'50",
+      "unit": "szt./pcs",
+      "pricePln": 16.91,
+      "priceEur": 3.78
+    },
+    {
+      "code": "A60346",
+      "descriptionPl": "KUBEK TRIANON 290ML",
+      "descriptionEng": "TRIANON MUG 290ML",
+      "unit": "szt./pcs",
+      "pricePln": 9.18,
+      "priceEur": 2.05
+    },
+    {
+      "code": "173352/2",
+      "descriptionPl": "ŁOPATKA SYLIKONOWA",
+      "descriptionEng": "SILICONE SPATULA",
+      "unit": "szt./pcs",
+      "pricePln": 8.67,
+      "priceEur": 1.94
+    },
+    {
+      "code": "A45135/01",
+      "descriptionPl": "ŁYŻECZKA DO HERBATY",
+      "descriptionEng": "TEASPOON",
+      "unit": "szt./pcs",
+      "pricePln": 1.73,
+      "priceEur": 0.39
+    },
+    {
+      "code": "170782",
+      "descriptionPl": "ŁYŻKA KUCHENNA DREWNIANA",
+      "descriptionEng": "WOODEN KITCHEN SPOON",
+      "unit": "szt./pcs",
+      "pricePln": 12.59,
+      "priceEur": 2.81
+    },
+    {
+      "code": "170104",
+      "descriptionPl": "ŁYŻKA STOŁOWA NIERDZ.",
+      "descriptionEng": "STAINLESS STEEL TABLESPOON",
+      "unit": "szt./pcs",
+      "pricePln": 2.19,
+      "priceEur": 0.49
+    },
+    {
+      "code": "A83123",
+      "descriptionPl": "ŁYŻKA SZUMÓWKA",
+      "descriptionEng": "SLOTTED SKIMMER",
+      "unit": "szt./pcs",
+      "pricePln": 31.76,
+      "priceEur": 7.09
+    },
+    {
+      "code": "A91971/01",
+      "descriptionPl": "MATA ANTYPOŚLIZGOWA SZER. 60CM L=10M",
+      "descriptionEng": "ANTI-SLIP MAT, WIDTH 60CM, LENGTH 10M",
+      "unit": "szt./pcs",
+      "pricePln": 76.32,
+      "priceEur": 17.05
+    },
+    {
+      "code": "170765/1",
+      "descriptionPl": "MISKA PLASTIKOWA 18L",
+      "descriptionEng": "PLASTIC BOWL 18L",
+      "unit": "szt./pcs",
+      "pricePln": 23.6,
+      "priceEur": 5.27
+    },
+    {
+      "code": "A72107",
+      "descriptionPl": "MLECZKO CIF 750ML",
+      "descriptionEng": "CIF CREAM CLEANER 750ML",
+      "unit": "szt./pcs",
+      "pricePln": 9.15,
+      "priceEur": 2.54
+    },
+    {
+      "code": "174272",
+      "descriptionPl": "MOP SZNURKOWY",
+      "descriptionEng": "STRING MOP HEAD",
+      "unit": "szt./pcs",
+      "pricePln": 5.1,
+      "priceEur": 1.46
+    },
+    {
+      "code": "550256/1",
+      "descriptionPl": "MYDŁO BIAŁY JELEŃ 100G",
+      "descriptionEng": "BIAŁY JELEŃ HYPOALLERGENIC SOAP 100G",
+      "unit": "szt./pcs",
+      "pricePln": 10.38,
+      "priceEur": 2.32
+    },
+    {
+      "code": "72162/01",
+      "descriptionPl": "MYDŁO DOVE KOSTKA 90G",
+      "descriptionEng": "DOVE BAR SOAP 90G",
+      "unit": "szt./pcs",
+      "pricePln": 5.63,
+      "priceEur": 1.6
+    },
+    {
+      "code": "A72169",
+      "descriptionPl": "MYDŁO TOALETOWE LUKSJA 90G",
+      "descriptionEng": "LUKSJA TOILET SOAP 90G",
+      "unit": "szt./pcs",
+      "pricePln": 2.11,
+      "priceEur": 0.53
+    },
+    {
+      "code": "A72169/2",
+      "descriptionPl": "MYDŁO TOALETOWE LUX 80G",
+      "descriptionEng": "LUX TOILET SOAP 80G",
+      "unit": "szt./pcs",
+      "pricePln": 2.27,
+      "priceEur": 0.57
+    },
+    {
+      "code": "A60128/02",
+      "descriptionPl": "MYDŁO W PŁYNIE 5L",
+      "descriptionEng": "LIQUID SOAP 5L",
+      "unit": "szt./pcs",
+      "pricePln": 13.79,
+      "priceEur": 3.46
+    },
+    {
+      "code": "550262",
+      "descriptionPl": "MYDŁO W PŁYNIE Z DOZOWNIKIEM 500ML",
+      "descriptionEng": "LIQUID SOAP WITH DISPENSER 500ML",
+      "unit": "szt./pcs",
+      "pricePln": 4.11,
+      "priceEur": 1.03
+    },
+    {
+      "code": "550185/5",
+      "descriptionPl": "NABŁYSZCZACZ DO ZMYWAREK 1L",
+      "descriptionEng": "RINSE FOR DISHWASHER 1L",
+      "unit": "szt./pcs",
+      "pricePln": 11.69,
+      "priceEur": 2.61
+    },
+    {
+      "code": "A45613",
+      "descriptionPl": "NÓŻ DO JARZYN",
+      "descriptionEng": "PARING KNIFE",
+      "unit": "szt./pcs",
+      "pricePln": 6.01,
+      "priceEur": 1.34
+    },
+    {
+      "code": "172325",
+      "descriptionPl": "NÓŻ KUCHENNY TRYBOWNIK",
+      "descriptionEng": "BONING KNIFE",
+      "unit": "szt./pcs",
+      "pricePln": 47.85,
+      "priceEur": 10.69
+    },
+    {
+      "code": "A72391",
+      "descriptionPl": "NÓŻ KUCHENNY ZE STOPKĄ STALGAST 25CM",
+      "descriptionEng": "STALGAST KITCHEN KNIFE WITH BOLSTER 25CM",
+      "unit": "szt./pcs",
+      "pricePln": 109.2,
+      "priceEur": 24.4
+    },
+    {
+      "code": "170101",
+      "descriptionPl": "NÓŻ STOŁOWY NIERDZ.",
+      "descriptionEng": "STAINLESS STEEL DINNER KNIFE",
+      "unit": "szt./pcs",
+      "pricePln": 4.25,
+      "priceEur": 0.95
+    },
+    {
+      "code": "A87816",
+      "descriptionPl": "OBRUS BAWEŁNA BIAŁY 120x200",
+      "descriptionEng": "WHITE COTTON TABLECLOTH 120X200CM",
+      "unit": "szt./pcs",
+      "pricePln": 75.33,
+      "priceEur": 16.83
+    },
+    {
+      "code": "150600/1",
+      "descriptionPl": "OBRUS PLAMOODP. 140x140",
+      "descriptionEng": "STAIN-RESISTANT TABLECLOTH 140X140CM",
+      "unit": "szt./pcs",
+      "pricePln": 56.7,
+      "priceEur": 12.67
+    },
+    {
+      "code": "A93147/1",
+      "descriptionPl": "ODKAMIENIACZ W TABLETKACH A'25",
+      "descriptionEng": "DESCALING TABLETS FOR COFFEE MACHINE A'25",
+      "unit": "szt./pcs",
+      "pricePln": 35.03,
+      "priceEur": 8.94
+    },
+    {
+      "code": "A85815",
+      "descriptionPl": "ODPLAMIACZ DO TKANIN VANISH 1L",
+      "descriptionEng": "VANISH FABRIC STAIN REMOVER 1L",
+      "unit": "szt./pcs",
+      "pricePln": 16.73,
+      "priceEur": 4.0
+    },
+    {
+      "code": "55033/4",
+      "descriptionPl": "ODŚWIEŻACZ POWIETRZA BRAIT 300ML",
+      "descriptionEng": "AIR FRESHENER 300ML",
+      "unit": "szt./pcs",
+      "pricePln": 7.64,
+      "priceEur": 1.81
+    },
+    {
+      "code": "A58712",
+      "descriptionPl": "OSTRZAŁKA DO NOŻY",
+      "descriptionEng": "BUTCHER'S SHARPENING STEEL",
+      "unit": "szt./pcs",
+      "pricePln": 22.82,
+      "priceEur": 5.1
+    },
+    {
+      "code": "A44642",
+      "descriptionPl": "OTWIERACZ DO KONS. Z MOCOWANIEM DO STOŁU",
+      "descriptionEng": "TABLE-MOUNTED CAN OPENER",
+      "unit": "szt./pcs",
+      "pricePln": 356.71,
+      "priceEur": 79.7
+    },
+    {
+      "code": "A45071",
+      "descriptionPl": "OTWIERACZ DO KONSERW",
+      "descriptionEng": "CAN OPENER",
+      "unit": "szt./pcs",
+      "pricePln": 12.31,
+      "priceEur": 2.75
+    },
+    {
+      "code": "A40004",
+      "descriptionPl": "PAPIER DO PIECZENIA 8M",
+      "descriptionEng": "BAKING PAPER 8M",
+      "unit": "szt./pcs",
+      "pricePln": 4.14,
+      "priceEur": 0.93
+    },
+    {
+      "code": "174242/1",
+      "descriptionPl": "PAPIER TOALETOWY A'8",
+      "descriptionEng": "TOILET PAPER A'8",
+      "unit": "szt./pcs",
+      "pricePln": 8.53,
+      "priceEur": 2.11
+    },
+    {
+      "code": "A73214",
+      "descriptionPl": "PASTA DO PODŁÓG SIN PAST LUX 5L",
+      "descriptionEng": "SIN PAST LUX FLOOR WAX 5L",
+      "unit": "szt./pcs",
+      "pricePln": 85.02,
+      "priceEur": 20.46
+    },
+    {
+      "code": "A72824/1",
+      "descriptionPl": "PATELNIA ALUM. Z POWŁ. TEFLONOWĄ FI=24",
+      "descriptionEng": "ALUMINIUM NON-STICK FRYING PAN, DIA. 24CM",
+      "unit": "szt./pcs",
+      "pricePln": 73.6,
+      "priceEur": 16.44
+    },
+    {
+      "code": "A72824",
+      "descriptionPl": "PATELNIA ALUM. Z POWŁ. TEFLONOWĄ FI=32",
+      "descriptionEng": "ALUMINIUM NON-STICK FRYING PAN, DIA. 32CM",
+      "unit": "szt./pcs",
+      "pricePln": 109.35,
+      "priceEur": 24.43
+    },
+    {
+      "code": "A87635",
+      "descriptionPl": "PATELNIA DO NALEŚNIKÓW 26CM",
+      "descriptionEng": "CREPE PAN 26CM",
+      "unit": "szt./pcs",
+      "pricePln": 43.96,
+      "priceEur": 9.82
+    },
+    {
+      "code": "A72831",
+      "descriptionPl": "PATELNIA TEFLONOWA 24CM",
+      "descriptionEng": "NON-STICK FRYING PAN 24CM",
+      "unit": "szt./pcs",
+      "pricePln": 43.74,
+      "priceEur": 9.77
+    },
+    {
+      "code": "A488483",
+      "descriptionPl": "PŁYN AJAX 1L",
+      "descriptionEng": "AJAX ALL-PURPOSE CLEANER 1L",
+      "unit": "szt./pcs",
+      "pricePln": 9.34,
+      "priceEur": 2.2
+    },
+    {
+      "code": "A70276",
+      "descriptionPl": "PŁYN DO CZYSZCZENIA ZMYWAREK 250ML",
+      "descriptionEng": "DISHWASHER CLEANER 250ML",
+      "unit": "szt./pcs",
+      "pricePln": 8.11,
+      "priceEur": 2.06
+    },
+    {
+      "code": "87307/1",
+      "descriptionPl": "PŁYN DO DEZYNFEKCJI RĄK I POWIERZCHNI TYTAN  5L",
+      "descriptionEng": "ANTI SEPTIC LIQUID 5L",
+      "unit": "szt./pcs",
+      "pricePln": 50.84,
+      "priceEur": 11.36
+    },
+    {
+      "code": "A73171/02",
+      "descriptionPl": "PŁYN DO DYWANÓW 500ML",
+      "descriptionEng": "CARPET CLEANER 500ML",
+      "unit": "szt./pcs",
+      "pricePln": 15.19,
+      "priceEur": 3.39
+    },
+    {
+      "code": "88642/2",
+      "descriptionPl": "PŁYN DO ŁAZIENEK TYTAN 500GR",
+      "descriptionEng": "TYTAN BATHROOM CLEANER 500G",
+      "unit": "szt./pcs",
+      "pricePln": 11.19,
+      "priceEur": 2.5
+    },
+    {
+      "code": "550163/10",
+      "descriptionPl": "PŁYN DO MYCIA GRILLI I PIECÓW Z TRIGGEREM STALGAST 1L",
+      "descriptionEng": "STALGAST GRILL & OVEN CLEANER WITH TRIGGER SPRAY 1L",
+      "unit": "szt./pcs",
+      "pricePln": 42.84,
+      "priceEur": 10.21
+    },
+    {
+      "code": "A60015",
+      "descriptionPl": "PŁYN DO MYCIA SZYB AJAX 500ML",
+      "descriptionEng": "AJAX GLASS CLEANER 500ML",
+      "unit": "szt./pcs",
+      "pricePln": 8.85,
+      "priceEur": 2.11
+    },
+    {
+      "code": "A48807",
+      "descriptionPl": "PŁYN DO NACZYŃ 1L",
+      "descriptionEng": "DISHWASHING LIQUID 1L",
+      "unit": "szt./pcs",
+      "pricePln": 3.06,
+      "priceEur": 0.76
+    },
+    {
+      "code": "A73192",
+      "descriptionPl": "PŁYN DO NACZYŃ FAIRY 900ML",
+      "descriptionEng": "FAIRY DISHWASHING LIQUID 900ML",
+      "unit": "szt./pcs",
+      "pricePln": 10.92,
+      "priceEur": 2.61
+    },
+    {
+      "code": "550180/1",
+      "descriptionPl": "PŁYN DO NACZYŃ LUDWIK 5L",
+      "descriptionEng": "LUDWIK DISHWASHING LIQUID 5L",
+      "unit": "szt./pcs",
+      "pricePln": 37.18,
+      "priceEur": 8.59
+    },
+    {
+      "code": "73196/11",
+      "descriptionPl": "PŁYN DO NACZYŃ LUDWIK 900G",
+      "descriptionEng": "LUDWIK DISHWASHING LIQUID 900G",
+      "unit": "szt./pcs",
+      "pricePln": 7.64,
+      "priceEur": 1.88
+    },
+    {
+      "code": "A73201/5",
+      "descriptionPl": "PŁYN DO PŁUKANIA TKANIN SILAN 880ML",
+      "descriptionEng": "SILAN FABRIC SOFTENER 880ML",
+      "unit": "szt./pcs",
+      "pricePln": 10.85,
+      "priceEur": 2.42
+    },
+    {
+      "code": "A84921",
+      "descriptionPl": "PŁYN DO PODŁÓG SIN LUX 5L",
+      "descriptionEng": "SIN LUX FLOOR CLEANER 5L",
+      "unit": "szt./pcs",
+      "pricePln": 59.02,
+      "priceEur": 14.2
+    },
+    {
+      "code": "A73165",
+      "descriptionPl": "PŁYN DO USUWANIA POWŁOK CLEANLUX 5L",
+      "descriptionEng": "CLEANLUX FLOOR STRIPPER 5L",
+      "unit": "szt./pcs",
+      "pricePln": 72.89,
+      "priceEur": 16.28
+    },
+    {
+      "code": "A73167",
+      "descriptionPl": "PŁYN DO WC DOMESTOS 750ML",
+      "descriptionEng": "DOMESTOS TOILET CLEANER 750ML",
+      "unit": "szt./pcs",
+      "pricePln": 8.26,
+      "priceEur": 2.24
+    },
+    {
+      "code": "A87412/2",
+      "descriptionPl": "PŁYN UNIWERSALNY TYTAN 1L",
+      "descriptionEng": "TYTAN ALL-PURPOSE CLEANER 1L",
+      "unit": "szt./pcs",
+      "pricePln": 6.73,
+      "priceEur": 1.6
+    },
+    {
+      "code": "A55339",
+      "descriptionPl": "PŁYN UNIWERSALNY TYTAN SPRAY 500ML",
+      "descriptionEng": "TYTAN ALL-PURPOSE CLEANER SPRAY 500ML",
+      "unit": "szt./pcs",
+      "pricePln": 8.69,
+      "priceEur": 2.07
+    },
+    {
+      "code": "A73375/1",
+      "descriptionPl": "PODUSZKA PÓŁPUCH 70x80",
+      "descriptionEng": "SEMI-DOWN PILLOW 70X80CM",
+      "unit": "szt./pcs",
+      "pricePln": 72.63,
+      "priceEur": 16.23
+    },
+    {
+      "code": "A73425",
+      "descriptionPl": "POŚCIEL SATYNA 140x200",
+      "descriptionEng": "SATIN BED LINEN SET 140X200CM",
+      "unit": "szt./pcs",
+      "pricePln": 94.23,
+      "priceEur": 21.05
+    },
+    {
+      "code": "A73425/2",
+      "descriptionPl": "POŚCIEL SATYNA 160x200",
+      "descriptionEng": "SATIN BED LINEN SET 160X200CM",
+      "unit": "szt./pcs",
+      "pricePln": 107.73,
+      "priceEur": 24.07
+    },
+    {
+      "code": "A73440",
+      "descriptionPl": "PÓŁMISEK BIAŁY 29CM",
+      "descriptionEng": "WHITE SERVING PLATTER 29CM",
+      "unit": "szt./pcs",
+      "pricePln": 29.4,
+      "priceEur": 6.57
+    },
+    {
+      "code": "174707",
+      "descriptionPl": "PRALKA AUTOMAT 220V/60Hz PRESTIGE+",
+      "descriptionEng": "AUTOMATIC WASHING MACHINE 220V/60Hz PRESTIGE+",
+      "unit": "szt./pcs",
+      "pricePln": 1835.12,
+      "priceEur": 410.0
+    },
+    {
+      "code": "550108/3",
+      "descriptionPl": "PROSZEK DO PRANIA BRYZA DO BIAŁEGO",
+      "descriptionEng": "BRYZA LAUNDRY DETERGENT FOR WHITES",
+      "unit": "kg",
+      "pricePln": 11.27,
+      "priceEur": 2.52
+    },
+    {
+      "code": "A91125",
+      "descriptionPl": "PROSZEK DO PRANIA BRYZA KOLOR",
+      "descriptionEng": "BRYZA COLOUR LAUNDRY DETERGENT",
+      "unit": "kg",
+      "pricePln": 11.27,
+      "priceEur": 2.52
+    },
+    {
+      "code": "550109/5",
+      "descriptionPl": "PROSZEK DO PRANIA PUROX KOLOR 10KG",
+      "descriptionEng": "PUROX COLOUR LAUNDRY DETERGENT 10KG",
+      "unit": "szt./pcs",
+      "pricePln": 48.94,
+      "priceEur": 14.35
+    },
+    {
+      "code": "A73703/1",
+      "descriptionPl": "PRZEŚCIERADŁO FROTTE Z GUMKĄ 140x200",
+      "descriptionEng": "FITTED TERRY SHEET 140X200CM",
+      "unit": "szt./pcs",
+      "pricePln": 66.95,
+      "priceEur": 14.96
+    },
+    {
+      "code": "A91151/1",
+      "descriptionPl": "PRZEŚCIERADŁO FROTTE Z GUMKĄ 180x200",
+      "descriptionEng": "FITTED TERRY SHEET 180X200CM",
+      "unit": "szt./pcs",
+      "pricePln": 71.28,
+      "priceEur": 15.93
+    },
+    {
+      "code": "A73704",
+      "descriptionPl": "PRZEŚCIERADŁO FROTTE Z GUMKĄ 90x200",
+      "descriptionEng": "FITTED TERRY SHEET 90X200CM",
+      "unit": "szt./pcs",
+      "pricePln": 42.86,
+      "priceEur": 9.58
+    },
+    {
+      "code": "150607/1",
+      "descriptionPl": "RĘCZNIK FROTTE 50x100",
+      "descriptionEng": "TERRY TOWEL 50X100CM",
+      "unit": "szt./pcs",
+      "pricePln": 22.68,
+      "priceEur": 5.07
+    },
+    {
+      "code": "150602",
+      "descriptionPl": "RĘCZNIK FROTTE 70x140",
+      "descriptionEng": "TERRY TOWEL 70X140CM",
+      "unit": "szt./pcs",
+      "pricePln": 38.75,
+      "priceEur": 8.66
+    },
+    {
+      "code": "174231/14",
+      "descriptionPl": "RĘCZNIK PAPIEROWY >FOXY TORNADO< /FOX/",
+      "descriptionEng": "PAPER TOWEL ROLL FOXY TORNADO",
+      "unit": "szt./pcs",
+      "pricePln": 13.04,
+      "priceEur": 3.31
+    },
+    {
+      "code": "174231/12",
+      "descriptionPl": "RĘCZNIK PAPIEROWY VELVET TURBO",
+      "descriptionEng": "PAPER TOWEL ROLL",
+      "unit": "szt./pcs",
+      "pricePln": 16.49,
+      "priceEur": 4.19
+    },
+    {
+      "code": "174231/1",
+      "descriptionPl": "RĘCZNIKI KUCHENNE PAPIEROWE A'2",
+      "descriptionEng": "PAPER KITCHEN TOWELS A'2",
+      "unit": "szt./pcs",
+      "pricePln": 3.3,
+      "priceEur": 0.94
+    },
+    {
+      "code": "73854",
+      "descriptionPl": "RĘKAWICE GUMOWE KUCHENNE ROZM. L",
+      "descriptionEng": "KITCHEN RUBBER GLOVES, PAIR, SIZE L",
+      "unit": "szt./pcs",
+      "pricePln": 1.77,
+      "priceEur": 0.45
+    },
+    {
+      "code": "92687/09",
+      "descriptionPl": "RĘKAWICE NITRYLOWE CZARNE A`100  L",
+      "descriptionEng": "BLACK NITRILE GLOVES A'100, SIZE L",
+      "unit": "szt./pcs",
+      "pricePln": 18.91,
+      "priceEur": 4.91
+    },
+    {
+      "code": "92687/03",
+      "descriptionPl": "RĘKAWICE NITRYLOWE CZARNE A`100  XL",
+      "descriptionEng": "BLACK NITRILE GLOVES A'100, SIZE XL",
+      "unit": "szt./pcs",
+      "pricePln": 18.91,
+      "priceEur": 4.91
+    },
+    {
+      "code": "A40882",
+      "descriptionPl": "RĘKAWICE PIEKARNICZE do 250°C",
+      "descriptionEng": "OVEN MITTS, HEAT-RESISTANT UP TO 250°C",
+      "unit": "para/pair",
+      "pricePln": 53.87,
+      "priceEur": 12.03
+    },
+    {
+      "code": "A91159",
+      "descriptionPl": "SALATERKA 21CM A'6",
+      "descriptionEng": "SALAD BOWL 21CM",
+      "unit": "szt./pcs",
+      "pricePln": 17.08,
+      "priceEur": 3.82
+    },
+    {
+      "code": "A73991",
+      "descriptionPl": "SALATERKA 24CM",
+      "descriptionEng": "SALAD BOWL 24CM",
+      "unit": "szt./pcs",
+      "pricePln": 19.24,
+      "priceEur": 4.3
+    },
+    {
+      "code": "174151/1",
+      "descriptionPl": "SERWETKI 15X15 A'500",
+      "descriptionEng": "PAPER NAPKINS 15X15CM A'500",
+      "unit": "szt./pcs",
+      "pricePln": 3.78,
+      "priceEur": 0.9
+    },
+    {
+      "code": "171455",
+      "descriptionPl": "SERWETKI PAPIEROWE 33x33 A'500",
+      "descriptionEng": "PAPER NAPKINS 33X33CM A'500",
+      "unit": "szt./pcs",
+      "pricePln": 19.22,
+      "priceEur": 4.55
+    },
+    {
+      "code": "A71579/1",
+      "descriptionPl": "SIDOLUX EXPERT PŁYN DO MYCIA PCV, GLAZURY 5 L",
+      "descriptionEng": "SIDOLUX PVC FLOOR CLEANER 5L",
+      "unit": "szt./pcs",
+      "pricePln": 65.14,
+      "priceEur": 14.55
+    },
+    {
+      "code": "A87414",
+      "descriptionPl": "SÓL DO ZMYWARKI 1,5KG",
+      "descriptionEng": "DISHWASHER SALT 1.5KG",
+      "unit": "szt./pcs",
+      "pricePln": 11.6,
+      "priceEur": 2.59
+    },
+    {
+      "code": "A74625/121",
+      "descriptionPl": "SPRAY NA OWADY 750ML BROS",
+      "descriptionEng": "INSECT KILLER SPRAY",
+      "unit": "szt./pcs",
+      "pricePln": 19.45,
+      "priceEur": 4.65
+    },
+    {
+      "code": "175540/3",
+      "descriptionPl": "SUSZARKA DO PRANIA 220V/60Hz",
+      "descriptionEng": "LAUNDRY DRYER 220V/60Hz",
+      "unit": "szt./pcs",
+      "pricePln": 1772.46,
+      "priceEur": 396.0
+    },
+    {
+      "code": "A74381",
+      "descriptionPl": "SZCZOTKA DO NACZYŃ",
+      "descriptionEng": "DISHWASHING BRUSH",
+      "unit": "szt./pcs",
+      "pricePln": 3.36,
+      "priceEur": 0.86
+    },
+    {
+      "code": "174253",
+      "descriptionPl": "SZCZOTKA DO WC",
+      "descriptionEng": "TOILET BRUSH SET",
+      "unit": "szt./pcs",
+      "pricePln": 5.08,
+      "priceEur": 1.29
+    },
+    {
+      "code": "X510636",
+      "descriptionPl": "SZCZOTKA DO ZAMIATANIA /MIĘKKA 300MM/ DREWNO",
+      "descriptionEng": "SOFT SWEEPING BRUSH 300MM, WOODEN",
+      "unit": "szt./pcs",
+      "pricePln": 12.15,
+      "priceEur": 3.09
+    },
+    {
+      "code": "510637/2",
+      "descriptionPl": "SZCZOTKA DO ZAMIATANIA /MIĘKKA 300MM/ PLASTIK",
+      "descriptionEng": "SOFT SWEEPING BRUSH 300MM, PLASTIC",
+      "unit": "szt./pcs",
+      "pricePln": 5.89,
+      "priceEur": 1.5
+    },
+    {
+      "code": "56322/01",
+      "descriptionPl": "SZKLANKA 200ML A'6",
+      "descriptionEng": "SOFT DRINK GLASSES A'6",
+      "unit": "szt./pcs",
+      "pricePln": 25.61,
+      "priceEur": 5.72
+    },
+    {
+      "code": "A48895",
+      "descriptionPl": "SZUFELKA+ZMIOTKA KPL.",
+      "descriptionEng": "DUSTPAN AND BRUSH SET",
+      "unit": "szt./pcs",
+      "pricePln": 6.09,
+      "priceEur": 1.59
+    },
+    {
+      "code": "A44008",
+      "descriptionPl": "ŚCIERKA KUCHENNA A'10",
+      "descriptionEng": "KITCHEN CLOTHS A'10",
+      "unit": "szt./pcs",
+      "pricePln": 4.94,
+      "priceEur": 1.25
+    },
+    {
+      "code": "A74611",
+      "descriptionPl": "ŚCIERKA KUCHENNA BAWEŁNIANA",
+      "descriptionEng": "COTTON KITCHEN TOWEL",
+      "unit": "szt./pcs",
+      "pricePln": 9.72,
+      "priceEur": 2.17
+    },
+    {
+      "code": "A87919/1",
+      "descriptionPl": "ŚCIERKA KUCHENNA GĄBCZASTA A'3",
+      "descriptionEng": "SPONGE CLOTHS A'3",
+      "unit": "szt./pcs",
+      "pricePln": 3.07,
+      "priceEur": 0.77
+    },
+    {
+      "code": "A70277/03",
+      "descriptionPl": "TABLETKI DO ZMYWARKI LUDWIK A'120",
+      "descriptionEng": "LUDWIK DISHWASHER TABLETS A'120",
+      "unit": "szt./pcs",
+      "pricePln": 81.77,
+      "priceEur": 18.27
+    },
+    {
+      "code": "A74839/1",
+      "descriptionPl": "TACA PLASTIKOWA STANDARD 45x35CM",
+      "descriptionEng": "STANDARD PLASTIC TRAY 45X35CM",
+      "unit": "szt./pcs",
+      "pricePln": 16.2,
+      "priceEur": 3.62
+    },
+    {
+      "code": "A74835",
+      "descriptionPl": "TALERZ DESEROWY 15CM",
+      "descriptionEng": "DESSERT PLATE 15CM",
+      "unit": "szt./pcs",
+      "pricePln": 8.29,
+      "priceEur": 1.85
+    },
+    {
+      "code": "A74837",
+      "descriptionPl": "TALERZ GŁĘBOKI 22,5 CM",
+      "descriptionEng": "SOUP PLATE 22.5CM",
+      "unit": "szt./pcs",
+      "pricePln": 10.36,
+      "priceEur": 2.31
+    },
+    {
+      "code": "A74842",
+      "descriptionPl": "TALERZ OBIADOWY PŁYTKI 24,5CM",
+      "descriptionEng": "FLAT DINNER PLATE 24.5CM",
+      "unit": "szt./pcs",
+      "pricePln": 11.27,
+      "priceEur": 2.52
+    },
+    {
+      "code": "A88203",
+      "descriptionPl": "TALERZ ŚNIADANIOWY 19,5CM",
+      "descriptionEng": "BREAKFAST PLATE 19.5CM",
+      "unit": "szt./pcs",
+      "pricePln": 9.32,
+      "priceEur": 2.08
+    },
+    {
+      "code": "A452236",
+      "descriptionPl": "TARKA CZWOROBOCZNA",
+      "descriptionEng": "FOUR-SIDED GRATER",
+      "unit": "szt./pcs",
+      "pricePln": 23.06,
+      "priceEur": 5.15
+    },
+    {
+      "code": "511078/3",
+      "descriptionPl": "TEKTURA FALISTA SZER.100CM DŁ.100MB",
+      "descriptionEng": "CORRUGATED CARDBOARD ROLL, WIDTH 100CM, LENGTH 100M",
+      "unit": "szt./pcs",
+      "pricePln": 215.87,
+      "priceEur": 48.23
+    },
+    {
+      "code": "A87307/01",
+      "descriptionPl": "TYTAN STAL NIERDZ. 500ML SPRAY",
+      "descriptionEng": "TYTAN STAINLESS STEEL CLEANING SPRAY – 500G",
+      "unit": "szt./pcs",
+      "pricePln": 8.69,
+      "priceEur": 2.07
+    },
+    {
+      "code": "A87307",
+      "descriptionPl": "TYTAN SPRAY DO MYCIA PIEKARNIKÓW 500ML",
+      "descriptionEng": "TYTAN OVEN CLEANER SPRAY 500ML",
+      "unit": "szt./pcs",
+      "pricePln": 8.69,
+      "priceEur": 2.07
+    },
+    {
+      "code": "174280/1",
+      "descriptionPl": "WIADRO MOP PLASTIK. 10L",
+      "descriptionEng": "PLASTIC MOP BUCKET 10L",
+      "unit": "szt./pcs",
+      "pricePln": 11.74,
+      "priceEur": 3.12
+    },
+    {
+      "code": "A85827",
+      "descriptionPl": "WIADRO MOP PLASTIK. Z SITEM VILEDA",
+      "descriptionEng": "VILEDA PLASTIC MOP BUCKET WITH WRINGER",
+      "unit": "szt./pcs",
+      "pricePln": 53.9,
+      "priceEur": 13.89
+    },
+    {
+      "code": "174123/12",
+      "descriptionPl": "WIADRO PLASTIKOWE 12L Z WYCISKACZEM",
+      "descriptionEng": "PLASTIC MOP BUCKET WITH WRINGER 12L",
+      "unit": "szt./pcs",
+      "pricePln": 12.75,
+      "priceEur": 3.38
+    },
+    {
+      "code": "170102",
+      "descriptionPl": "WIDELEC STOŁOWY NIERDZ.",
+      "descriptionEng": "STAINLESS STEEL DINNER FORK",
+      "unit": "szt./pcs",
+      "pricePln": 2.33,
+      "priceEur": 0.52
+    },
+    {
+      "code": "A75771",
+      "descriptionPl": "WORECZKI NA MROŻONKI 25x35 2,5L A'50",
+      "descriptionEng": "FREEZER BAGS 25X35CM, 2.5L, A'50",
+      "unit": "szt./pcs",
+      "pricePln": 3.74,
+      "priceEur": 0.84
+    },
+    {
+      "code": "A75772",
+      "descriptionPl": "WORECZKI NA MROŻONKI 30x40 6L A'50",
+      "descriptionEng": "FREEZER BAGS 30X40CM, 6L, A'50",
+      "unit": "szt./pcs",
+      "pricePln": 5.15,
+      "priceEur": 1.15
+    },
+    {
+      "code": "46200/2",
+      "descriptionPl": "WORKI NA ŚMIECI 120L A'25 BEZBARWNE",
+      "descriptionEng": "TRANSPARENT GARBAGE BAGS 120L A'25",
+      "unit": "szt./pcs",
+      "pricePln": 10.08,
+      "priceEur": 2.65
+    },
+    {
+      "code": "A82214",
+      "descriptionPl": "WORKI NA ŚMIECI 240L A'10 BEZBARWNE",
+      "descriptionEng": "TRANSPARENT GARBAGE BAGS 240L A'10",
+      "unit": "szt./pcs",
+      "pricePln": 12.89,
+      "priceEur": 3.4
+    },
+    {
+      "code": "A82214/4",
+      "descriptionPl": "WORKI NA ŚMIECI 35L A'50 BEZBARWNE",
+      "descriptionEng": "TRANSPARENT GARBAGE BAGS 35L A'50",
+      "unit": "szt./pcs",
+      "pricePln": 5.21,
+      "priceEur": 1.37
+    },
+    {
+      "code": "A60567/11",
+      "descriptionPl": "WORKI NA ŚMIECI 60L A'50 BEZBARWNE",
+      "descriptionEng": "TRANSPARENT GARBAGE BAGS 60L A'50",
+      "unit": "szt./pcs",
+      "pricePln": 9.7,
+      "priceEur": 2.55
+    },
+    {
+      "code": "A82214/1",
+      "descriptionPl": "WORKI NA ŚMIECI 300L A'10 BEZBARWNE",
+      "descriptionEng": "TRANSPARENT GARBAGE BAGS 300L A'10",
+      "unit": "szt./pcs",
+      "pricePln": 16.53,
+      "priceEur": 4.35
+    },
+    {
+      "code": "174176/1",
+      "descriptionPl": "WORKI NA ŚMIECI LD 300L A'10 /MOCNE/",
+      "descriptionEng": "HEAVY-DUTY LDPE GARBAGE BAGS 240L A'10",
+      "unit": "szt./pcs",
+      "pricePln": 12.12,
+      "priceEur": 3.19
+    },
+    {
+      "code": "174175/1",
+      "descriptionPl": "WORKI NA ŚMIECI LD 120L A'25 /MOCNE/",
+      "descriptionEng": "HEAVY-DUTY LDPE GARBAGE BAGS 120L A'25",
+      "unit": "szt./pcs",
+      "pricePln": 8.44,
+      "priceEur": 2.22
+    },
+    {
+      "code": "174175/2",
+      "descriptionPl": "WORKI NA ŚMIECI LD 160L A'10 /MOCNE/",
+      "descriptionEng": "HEAVY-DUTY LDPE GARBAGE BAGS 160L A'10",
+      "unit": "szt./pcs",
+      "pricePln": 5.1,
+      "priceEur": 1.34
+    },
+    {
+      "code": "174173/3",
+      "descriptionPl": "WORKI NA ŚMIECI LD 240L A'10 /MOCNE/",
+      "descriptionEng": "HEAVY-DUTY LDPE GARBAGE BAGS 240L A'10",
+      "unit": "szt./pcs",
+      "pricePln": 8.43,
+      "priceEur": 2.22
+    },
+    {
+      "code": "174173/01",
+      "descriptionPl": "WORKI NA ŚMIECI LD 35L A'50 /MOCNE/",
+      "descriptionEng": "HEAVY-DUTY LDPE GARBAGE BAGS 35L A'50",
+      "unit": "szt./pcs",
+      "pricePln": 4.83,
+      "priceEur": 1.27
+    },
+    {
+      "code": "174171/99",
+      "descriptionPl": "WORKI NA ŚMIECI LD 60L A'50 /MOCNE/",
+      "descriptionEng": "HEAVY-DUTY LDPE GARBAGE BAGS 60L A'50",
+      "unit": "szt./pcs",
+      "pricePln": 8.39,
+      "priceEur": 2.21
+    },
+    {
+      "code": "A60737",
+      "descriptionPl": "WYBIELACZ ACE 1L",
+      "descriptionEng": "ACE BLEACH 1L",
+      "unit": "szt./pcs",
+      "pricePln": 7.31,
+      "priceEur": 1.63
+    },
+    {
+      "code": "A85603/1",
+      "descriptionPl": "WYCIERACZKA DYWANOWA PODGUMOWANA 150x90",
+      "descriptionEng": "ENTRANCE MAT 150X90CM",
+      "unit": "szt./pcs",
+      "pricePln": 85.04,
+      "priceEur": 19.0
+    },
+    {
+      "code": "A85596",
+      "descriptionPl": "WYCIERACZKA DYWANOWA PODGUMOWANA 60x40",
+      "descriptionEng": "RUBBER-BACKED ENTRANCE MAT 60X40CM",
+      "unit": "szt./pcs",
+      "pricePln": 22.94,
+      "priceEur": 5.12
+    },
+    {
+      "code": "A75851",
+      "descriptionPl": "WYCIERACZKA DYWANOWA PODGUMOWANA 60x90",
+      "descriptionEng": "ENTRANCE MAT 60X90CM",
+      "unit": "szt./pcs",
+      "pricePln": 40.49,
+      "priceEur": 9.05
+    },
+    {
+      "code": "A75868",
+      "descriptionPl": "WYCISKACZ DO CZOSNKU",
+      "descriptionEng": "GARLIC PRESS",
+      "unit": "szt./pcs",
+      "pricePln": 24.17,
+      "priceEur": 5.4
+    },
+    {
+      "code": "A44511",
+      "descriptionPl": "WYKAŁACZKI A'1000 (ZAFOLIOWANE)",
+      "descriptionEng": "INDIVIDUALLY WRAPPED TOOTHPICKS A'1000",
+      "unit": "szt./pcs",
+      "pricePln": 8.35,
+      "priceEur": 2.11
+    },
+    {
+      "code": "A75871",
+      "descriptionPl": "WYKAŁACZKI A'140 BECZKA",
+      "descriptionEng": "TOOTHPICKS IN BARREL-SHAPED DISPENSER A'140",
+      "unit": "szt./pcs",
+      "pricePln": 1.4,
+      "priceEur": 0.35
+    },
+    {
+      "code": "A60586",
+      "descriptionPl": "ZASŁONKA PRYSZNICOWA 180x200CM",
+      "descriptionEng": "SHOWER CURTAIN 180X200CM",
+      "unit": "szt./pcs",
+      "pricePln": 20.12,
+      "priceEur": 4.5
+    },
+    {
+      "code": "60599/1",
+      "descriptionPl": "ZMYWAK KUCHENNY A'10 (MAŁY)",
+      "descriptionEng": "SMALL DISHWASHING SPONGES A'10",
+      "unit": "szt./pcs",
+      "pricePln": 2.77,
+      "priceEur": 0.62
+    },
+    {
+      "code": "A488487/01",
+      "descriptionPl": "ZMYWAK KUCHENNY DUŻY A'5",
+      "descriptionEng": "LARGE KITCHEN SPONGES A'5",
+      "unit": "szt./pcs",
+      "pricePln": 2.02,
+      "priceEur": 0.51
+    },
+    {
+      "code": "A76237/2",
+      "descriptionPl": "ZMYWARKA DO NACZYŃ 220V BOSCH",
+      "descriptionEng": "BOSCH DISHWASHER 220V",
+      "unit": "szt./pcs",
+      "pricePln": 2154.59,
+      "priceEur": 481.37
+    },
+    {
+      "code": "A70166",
+      "descriptionPl": "BLACHA DO CIASTA",
+      "descriptionEng": "BAKING TRAY",
+      "unit": "szt./pcs",
+      "pricePln": 33.99,
+      "priceEur": 7.59
+    },
+    {
+      "code": "A77533",
+      "descriptionPl": "CZAPKA KUCHARSKA FURAŻERKA A'100",
+      "descriptionEng": "CHEF'S GARRISON CAP, PACK OF 100",
+      "unit": "szt./pcs",
+      "pricePln": 21.35,
+      "priceEur": 4.77
+    },
+    {
+      "code": "A70482/1",
+      "descriptionPl": "DURSZLAK /CEDZAK/ NIERDZEWNY 32CM",
+      "descriptionEng": "STAINLESS STEEL COLANDER / STRAINER, 32 CM",
+      "unit": "szt./pcs",
+      "pricePln": 51.21,
+      "priceEur": 11.44
+    },
+    {
+      "code": "A87017/11",
+      "descriptionPl": "FORMA DO CIASTA 40x10x7f",
+      "descriptionEng": "CAKE BAKING TIN 40 × 10 × 7 CM",
+      "unit": "szt./pcs",
+      "pricePln": 15.66,
+      "priceEur": 3.5
+    },
+    {
+      "code": "171905/41",
+      "descriptionPl": "GARNEK NIERDZEWNY Z POKRYWKĄ 50 L",
+      "descriptionEng": "STAINLESS STEEL STOCK POT WITH LID, 50 L",
+      "unit": "szt./pcs",
+      "pricePln": 333.33,
+      "priceEur": 74.47
+    },
+    {
+      "code": "12167/10",
+      "descriptionPl": "KLOC MASARSKI DREWNIANY",
+      "descriptionEng": "WOODEN BUTCHER'S BLOCK",
+      "unit": "szt./pcs",
+      "pricePln": 486.3,
+      "priceEur": 108.65
+    },
+    {
+      "code": "A71362/01",
+      "descriptionPl": "KOŁDRA 140x200",
+      "descriptionEng": "DUVET 140x200",
+      "unit": "szt./pcs",
+      "pricePln": 66.99,
+      "priceEur": 14.97
+    },
+    {
+      "code": "150381/14",
+      "descriptionPl": "KOŁDRA 160x200",
+      "descriptionEng": "DUVET 160x200",
+      "unit": "szt./pcs",
+      "pricePln": 72.35,
+      "priceEur": 16.16
+    },
+    {
+      "code": "A72685",
+      "descriptionPl": "KORKOCIĄG",
+      "descriptionEng": "CORKSCREW",
+      "unit": "szt./pcs",
+      "pricePln": 7.3,
+      "priceEur": 1.63
+    },
+    {
+      "code": "A43552/02",
+      "descriptionPl": "KOSZ NA ŚMIECI 50L",
+      "descriptionEng": "WASTE BIN, 50 L",
+      "unit": "szt./pcs",
+      "pricePln": 141.28,
+      "priceEur": 31.56
+    },
+    {
+      "code": "A43552/4",
+      "descriptionPl": "KOSZ NA ŚMIECI STALOWY Z PEDAŁEM 30L",
+      "descriptionEng": "STAINLESS STEEL PEDAL BIN 30L",
+      "unit": "szt./pcs",
+      "pricePln": 147.26,
+      "priceEur": 32.9
+    },
+    {
+      "code": "A43552/9",
+      "descriptionPl": "KOSZ NA ŚMIECI STALOWY Z PEDAŁEM 5L",
+      "descriptionEng": "STEEL PEDAL WASTE BIN, 5 L",
+      "unit": "szt./pcs",
+      "pricePln": 51.3,
+      "priceEur": 11.46
+    },
+    {
+      "code": "A81148/1",
+      "descriptionPl": "LAMPA OWADOBÓJCZA",
+      "descriptionEng": "INSECT KILLER LAMP",
+      "unit": "szt./pcs",
+      "pricePln": 186.95,
+      "priceEur": 41.77
+    },
+    {
+      "code": "A70166/01",
+      "descriptionPl": "MASELNICA NIERDZEWNA",
+      "descriptionEng": "STAINLESS STEEL BUTTER DISH",
+      "unit": "szt./pcs",
+      "pricePln": 11.91,
+      "priceEur": 2.66
+    },
+    {
+      "code": "510801/1",
+      "descriptionPl": "MIOTŁA",
+      "descriptionEng": "BROOM",
+      "unit": "szt./pcs",
+      "pricePln": 11.39,
+      "priceEur": 2.55
+    },
+    {
+      "code": "A45097",
+      "descriptionPl": "MISKA PLASTIKOWA 24CM",
+      "descriptionEng": "PLASTIC BOWL 24CM",
+      "unit": "szt./pcs",
+      "pricePln": 6.6,
+      "priceEur": 1.48
+    },
+    {
+      "code": "A72143",
+      "descriptionPl": "MOP WKŁAD VILEDA",
+      "descriptionEng": "VILEDA MOP REFILL",
+      "unit": "szt./pcs",
+      "pricePln": 12.8,
+      "priceEur": 2.86
+    },
+    {
+      "code": "150600/97",
+      "descriptionPl": "OBRUS PLAMOODP. 120x200 KRATKA",
+      "descriptionEng": "STAIN-RESISTANT TABLECLOTH 120x200 CHECKERED",
+      "unit": "szt./pcs",
+      "pricePln": 44.0,
+      "priceEur": 9.83
+    },
+    {
+      "code": "150600/98",
+      "descriptionPl": "OBRUS PLAMOODP. 160x160 KRATKA",
+      "descriptionEng": "STAIN-RESISTANT TABLECLOTH 160x160 CHECKERED",
+      "unit": "szt./pcs",
+      "pricePln": 38.64,
+      "priceEur": 8.63
+    },
+    {
+      "code": "A91647/2",
+      "descriptionPl": "OBRUS PLAMOODP. 190x220",
+      "descriptionEng": "STAIN-RESISTANT TABLECLOTH 190x220",
+      "unit": "szt./pcs",
+      "pricePln": 69.26,
+      "priceEur": 15.47
+    },
+    {
+      "code": "550125",
+      "descriptionPl": "PŁYN DO PŁUKANIA TKANIN 2L",
+      "descriptionEng": "FABRIC SOFTENER 2L",
+      "unit": "szt./pcs",
+      "pricePln": 5.75,
+      "priceEur": 1.54
+    },
+    {
+      "code": "A73204",
+      "descriptionPl": "PŁYN DO PŁUKANIA TKANIN 4L",
+      "descriptionEng": "FABRIC SOFTENER 4L",
+      "unit": "szt./pcs",
+      "pricePln": 24.73,
+      "priceEur": 5.52
+    },
+    {
+      "code": "A92508/3",
+      "descriptionPl": "POSZEWKA NA KOŁDRĘ 150x200 / 50x60",
+      "descriptionEng": "DUVET COVER 150 × 200 CM / PILLOWCASE 50 × 60 CM",
+      "unit": "szt./pcs",
+      "pricePln": 68.28,
+      "priceEur": 15.26
+    },
+    {
+      "code": "150286/2",
+      "descriptionPl": "POSZEWKA NA PODUSZKĘ 70x50",
+      "descriptionEng": "PILLOWCASE 70 × 50 CM",
+      "unit": "szt./pcs",
+      "pricePln": 12.39,
+      "priceEur": 2.77
+    },
+    {
+      "code": "150286/1",
+      "descriptionPl": "POSZEWKA NA PODUSZKĘ 70x80",
+      "descriptionEng": "PILLOWCASE 70 × 80 CM",
+      "unit": "szt./pcs",
+      "pricePln": 13.36,
+      "priceEur": 2.98
+    },
+    {
+      "code": "550109",
+      "descriptionPl": "PROSZEK DO PRANIA 25KG",
+      "descriptionEng": "LAUNDRY DETERGENT POWDER 25KG",
+      "unit": "szt./pcs",
+      "pricePln": 55.84,
+      "priceEur": 12.48
+    },
+    {
+      "code": "A73611/2",
+      "descriptionPl": "PROSZEK DO PRANIA 8 KG",
+      "descriptionEng": "LAUNDRY DETERGENT POWDER 8KG",
+      "unit": "szt./pcs",
+      "pricePln": 18.99,
+      "priceEur": 4.24
+    },
+    {
+      "code": "A87817/4",
+      "descriptionPl": "PRZEŚCIERADŁO FROTTE Z GUMKĄ 120x200",
+      "descriptionEng": "FITTED TERRY SHEET WITH ELASTIC 120x200",
+      "unit": "szt./pcs",
+      "pricePln": 34.14,
+      "priceEur": 7.63
+    },
+    {
+      "code": "A87817/3",
+      "descriptionPl": "PRZEŚCIERADŁO FROTTE Z GUMKĄ 160x200",
+      "descriptionEng": "FITTED TERRY SHEET WITH ELASTIC 160x200",
+      "unit": "szt./pcs",
+      "pricePln": 68.29,
+      "priceEur": 15.26
+    },
+    {
+      "code": "A91151/1",
+      "descriptionPl": "PRZEŚCIERADŁO FROTTE Z GUMKĄ 180x200",
+      "descriptionEng": "FITTED TERRY SHEET WITH ELASTIC 180x200",
+      "unit": "szt./pcs",
+      "pricePln": 71.4,
+      "priceEur": 15.95
+    },
+    {
+      "code": "A73445",
+      "descriptionPl": "PÓŁMISEK 33×24CM",
+      "descriptionEng": "OVAL SERVING PLATTER 33×24CM",
+      "unit": "szt./pcs",
+      "pricePln": 30.48,
+      "priceEur": 6.81
+    },
+    {
+      "code": "150607",
+      "descriptionPl": "RĘCZNIK 50x100",
+      "descriptionEng": "TOWEL 50x100",
+      "unit": "szt./pcs",
+      "pricePln": 12.8,
+      "priceEur": 2.86
+    },
+    {
+      "code": "73855/25",
+      "descriptionPl": "ROLETA P/SŁONECZNA 108x100cm",
+      "descriptionEng": "SUN BLIND / ROLLER BLIND 108 × 100 CM",
+      "unit": "szt./pcs",
+      "pricePln": 120.8,
+      "priceEur": 26.99
+    },
+    {
+      "code": "73855/23",
+      "descriptionPl": "ROLETA P/SŁONECZNA 138x100cm",
+      "descriptionEng": "SUN BLIND / ROLLER BLIND 138 × 100 CM",
+      "unit": "szt./pcs",
+      "pricePln": 150.81,
+      "priceEur": 33.69
+    },
+    {
+      "code": "73855/24",
+      "descriptionPl": "ROLETA P/SŁONECZNA 152x100cm",
+      "descriptionEng": "SUN BLIND / ROLLER BLIND 152 × 100 CM",
+      "unit": "szt./pcs",
+      "pricePln": 163.7,
+      "priceEur": 36.57
+    },
+    {
+      "code": "73855/22",
+      "descriptionPl": "ROLETA P/SŁONECZNA 168x100cm",
+      "descriptionEng": "SUN BLIND / ROLLER BLIND 168 × 100 CM",
+      "unit": "szt./pcs",
+      "pricePln": 184.04,
+      "priceEur": 41.12
+    },
+    {
+      "code": "A85845",
+      "descriptionPl": "SERWETNIK",
+      "descriptionEng": "NAPKIN HOLDER",
+      "unit": "szt./pcs",
+      "pricePln": 25.99,
+      "priceEur": 5.81
+    },
+    {
+      "code": "A87426/1",
+      "descriptionPl": "SITO METALOWE 20CM",
+      "descriptionEng": "METAL SIEVE 20CM",
+      "unit": "szt./pcs",
+      "pricePln": 14.56,
+      "priceEur": 3.25
+    },
+    {
+      "code": "172372",
+      "descriptionPl": "SKROBAK KUCHENNY DO RYB",
+      "descriptionEng": "KITCHEN FISH SCALER",
+      "unit": "szt./pcs",
+      "pricePln": 30.72,
+      "priceEur": 6.86
+    },
+    {
+      "code": "A46214/01",
+      "descriptionPl": "SOLNICZKA",
+      "descriptionEng": "SALT SHAKER",
+      "unit": "szt./pcs",
+      "pricePln": 17.33,
+      "priceEur": 3.87
+    },
+    {
+      "code": "A87414/01",
+      "descriptionPl": "SÓL DO ZMYWARKI SOMAT 1,2KG",
+      "descriptionEng": "SOMAT DISHWASHER SALT 1.2 KG",
+      "unit": "szt./pcs",
+      "pricePln": 5.47,
+      "priceEur": 1.22
+    },
+    {
+      "code": "A452236/3",
+      "descriptionPl": "SZATKOWNICA ELEKTRYCZNA",
+      "descriptionEng": "ELECTRIC VEGETABLE SLICER",
+      "unit": "szt./pcs",
+      "pricePln": 119.66,
+      "priceEur": 26.73
+    },
+    {
+      "code": "A74414/1",
+      "descriptionPl": "SZCZOTKA RYŻOWA Z RĄCZKA (ŻELAZKO)",
+      "descriptionEng": "RICE-ROOT SCRUBBING BRUSH WITH HANDLE",
+      "unit": "szt./pcs",
+      "pricePln": 10.24,
+      "priceEur": 2.29
+    },
+    {
+      "code": "A41107",
+      "descriptionPl": "SZCZYPCE GRILLOWE",
+      "descriptionEng": "BBQ TONGS",
+      "unit": "szt./pcs",
+      "pricePln": 10.46,
+      "priceEur": 2.34
+    },
+    {
+      "code": "A488451",
+      "descriptionPl": "TALERZ PLAST. A'100",
+      "descriptionEng": "PLASTIC PLATES, PACK OF 100",
+      "unit": "szt./pcs",
+      "pricePln": 6.3,
+      "priceEur": 1.41
+    },
+    {
+      "code": "A78321",
+      "descriptionPl": "TERMOMETR DO CHŁODNI",
+      "descriptionEng": "COLD ROOM THERMOMETER",
+      "unit": "szt./pcs",
+      "pricePln": 4.18,
+      "priceEur": 0.93
+    },
+    {
+      "code": "174188/91",
+      "descriptionPl": "TOREBKI FOLIOWE 23x45CM A'100",
+      "descriptionEng": "PLASTIC BAGS 23 × 45 CM, PACK OF 100",
+      "unit": "szt./pcs",
+      "pricePln": 14.51,
+      "priceEur": 3.24
+    },
+    {
+      "code": "A76580/01",
+      "descriptionPl": "WIADRO MOP PLASTIK 10 LTR",
+      "descriptionEng": "PLASTIC MOP BUCKET 10L",
+      "unit": "szt./pcs",
+      "pricePln": 7.71,
+      "priceEur": 1.72
+    },
+    {
+      "code": "44015/1",
+      "descriptionPl": "WIADRO Z WYCISKACZEM VILEDA ULTRAMAX",
+      "descriptionEng": "VILEDA ULTRAMAX BUCKET WITH WRINGER",
+      "unit": "szt./pcs",
+      "pricePln": 39.6,
+      "priceEur": 8.85
+    },
+    {
+      "code": "A70062/01",
+      "descriptionPl": "WODA PO GOLENIU NIVEA 100ML",
+      "descriptionEng": "NIVEA AFTER SHAVE LOTION 100 ML",
+      "unit": "szt./pcs",
+      "pricePln": 30.72,
+      "priceEur": 6.86
+    },
+    {
+      "code": "511068/5",
+      "descriptionPl": "WYCIERACZKA PODGUMOWANA 90x150",
+      "descriptionEng": "RUBBER-BACKED DOORMAT 90x150",
+      "unit": "szt./pcs",
+      "pricePln": 112.74,
+      "priceEur": 25.19
+    }
+  ]
+}</script></body></html>
